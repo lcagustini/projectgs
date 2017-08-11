@@ -3,9 +3,9 @@ OBJS = $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 
 CC = gcc
 
-COMPILER_FLAGS = -w
+COMPILER_FLAGS = -w -g
 
-LINKER_FLAGS = -lSDL2 -lSDL2_image
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lm
 
 OBJ_NAME = main
 
