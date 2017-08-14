@@ -14,40 +14,34 @@
 #define mapWidth 24
 #define mapHeight 24
 
-#define RED 0xFF0000
-#define WHITE 0xFFFFFF
-#define GREEN 0x00FF00
-#define PURPLE 0xAA00FF
-#define YELLOW 0xFFFF00
-
 #define DARKER(a, b) (((a & 0xFF0000)/b) & 0xFF0000) + (((a & 0x00FF00)/b) & 0x00FF00) + (((a & 0x0000FF)/b) & 0x0000FF)
 
 int worldMap[mapWidth][mapHeight]=
 {
-    {RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,WHITE,WHITE,WHITE,WHITE,WHITE,0,0,0,0,GREEN,0,GREEN,0,GREEN,0,0,0,RED},
-    {RED,0,0,0,0,0,WHITE,0,0,0,WHITE,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,WHITE,0,0,0,WHITE,0,0,0,0,GREEN,0,0,0,GREEN,0,0,0,RED},
-    {RED,0,0,0,0,0,WHITE,0,0,0,WHITE,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,WHITE,WHITE,0,WHITE,WHITE,0,0,0,0,GREEN,0,GREEN,0,GREEN,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,0,YELLOW,0,0,0,0,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,0,0,0,0,PURPLE,0,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,0,YELLOW,0,0,0,0,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,0,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,YELLOW,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED,RED}
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+    {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
+    {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
 typedef struct{
@@ -108,26 +102,25 @@ SDL_Surface *loadTexture(char *path, SDL_Surface *screen){
         printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
         return NULL;
     }
-    /*opt = SDL_ConvertSurface(load, screen->format, NULL);
+    opt = SDL_ConvertSurface(load, screen->format, NULL);
     SDL_FreeSurface(load);
     if(opt == NULL){
         printf("Unable to optimize image! SDL Error: %s\n", SDL_GetError());
         return NULL;
     }
 
-    return opt;*/
-    return load;
+    return opt;
 }
 
 void loop(SDL_Window *window){
-    SDL_Surface *screenSurface = NULL, *texture = NULL;
+    SDL_Surface *screenSurface = NULL;
     SDL_Event e;
     int side, height, drawStart, drawEnd, textx, texty;
     double wallx;
     Player player;
     Ray ray;
     Screen screen;
-
+    SDL_Surface *textures[5];
 
     player.x = player.y = 12;
     player.dirx = 0;
@@ -141,8 +134,12 @@ void loop(SDL_Window *window){
     SDL_Rect botScreen = {.x = 0, .y = SCREEN_HEIGHT/2, .w = SCREEN_WIDTH, .h = SCREEN_HEIGHT -1};
 
     screenSurface = SDL_GetWindowSurface(window);
-    //texture = loadTexture("gfx/brick.png", screenSurface);
-    texture = SDL_LoadBMP("gfx/brick.bmp");
+
+    textures[0] = loadTexture("gfx/brick.png", screenSurface);
+    textures[1] = loadTexture("gfx/wood.png", screenSurface);
+    textures[2] = loadTexture("gfx/stone.png", screenSurface);
+    textures[3] = loadTexture("gfx/sand.png", screenSurface);
+    textures[4] = loadTexture("gfx/pumpkin.png", screenSurface);
 
     Uint64 curTime = SDL_GetPerformanceCounter();
     Uint64 lastTime = 0;
@@ -266,11 +263,9 @@ void loop(SDL_Window *window){
             for(int j = drawStart; j < drawEnd; j++){
                 texty = (((j*256 - SCREEN_HEIGHT*128 + height*128) * TEXTURE_HEIGHT) / height) /256;
                 if(side)
-                    putPixel(screenSurface, i, j, getPixel(texture, textx, texty));
-                    //putPixel(screenSurface, i, j, worldMap[ray.gridx][ray.gridy]);
+                    putPixel(screenSurface, i, j, getPixel(textures[worldMap[ray.gridx][ray.gridy] -1], textx, texty));
                 else
-                    putPixel(screenSurface, i, j, DARKER(getPixel(texture, textx, texty), 2));
-                    //putPixel(screenSurface, i, j, DARKER(worldMap[ray.gridx][ray.gridy], 2));
+                    putPixel(screenSurface, i, j, DARKER(getPixel(textures[worldMap[ray.gridx][ray.gridy] -1], textx, texty), 2));
             }
 
             if(SDL_MUSTLOCK(screenSurface))
@@ -280,7 +275,7 @@ void loop(SDL_Window *window){
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
-        //printf("FPS: %lf\n", 1/dt);
+        printf("FPS: %lf\n", 1/dt);
         //printf("x: %lf - y: %lf\n", player.x, player.y);
         SDL_UpdateWindowSurface(window);
     }
