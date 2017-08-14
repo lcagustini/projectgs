@@ -220,8 +220,12 @@ void loop(SDL_Window *window){
             if(SDL_MUSTLOCK(screenSurface))
                 SDL_LockSurface(screenSurface);
 
-            for(int j = drawStart; j < drawEnd; j++)
-                putPixel(screenSurface, i, j, worldMap[ray.gridx][ray.gridy]);
+            for(int j = drawStart; j < drawEnd; j++){
+                if(side = 1)
+                    putPixel(screenSurface, i, j, worldMap[ray.gridx][ray.gridy]);
+                else
+                    putPixel(screenSurface, i, j, worldMap[ray.gridx][ray.gridy]/2);
+            }
 
             if(SDL_MUSTLOCK(screenSurface))
                 SDL_UnlockSurface(screenSurface);
