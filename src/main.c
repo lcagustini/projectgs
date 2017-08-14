@@ -8,14 +8,17 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
+#define TEXTURE_WIDTH 16
+#define TEXTURE_HEIGHT 16
+
 #define mapWidth 24
 #define mapHeight 24
 
 #define RED 0xFF0000
-#define BLUE 0x0000FF
+#define WHITE 0xFFFFFF
 #define GREEN 0x00FF00
 #define PURPLE 0xAA00FF
-#define YELLOW 0x00FFFF
+#define YELLOW 0xFFFF00
 
 #define DARKER(a, b) (((a & 0xFF0000)/b) & 0xFF0000) + (((a & 0x00FF00)/b) & 0x00FF00) + (((a & 0x0000FF)/b) & 0x0000FF)
 
@@ -25,11 +28,11 @@ int worldMap[mapWidth][mapHeight]=
     {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
     {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
     {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,BLUE,BLUE,BLUE,BLUE,BLUE,0,0,0,0,GREEN,0,GREEN,0,GREEN,0,0,0,RED},
-    {RED,0,0,0,0,0,BLUE,0,0,0,BLUE,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,BLUE,0,0,0,BLUE,0,0,0,0,GREEN,0,0,0,GREEN,0,0,0,RED},
-    {RED,0,0,0,0,0,BLUE,0,0,0,BLUE,0,0,0,0,0,0,0,0,0,0,0,0,RED},
-    {RED,0,0,0,0,0,BLUE,BLUE,0,BLUE,BLUE,0,0,0,0,GREEN,0,GREEN,0,GREEN,0,0,0,RED},
+    {RED,0,0,0,0,0,WHITE,WHITE,WHITE,WHITE,WHITE,0,0,0,0,GREEN,0,GREEN,0,GREEN,0,0,0,RED},
+    {RED,0,0,0,0,0,WHITE,0,0,0,WHITE,0,0,0,0,0,0,0,0,0,0,0,0,RED},
+    {RED,0,0,0,0,0,WHITE,0,0,0,WHITE,0,0,0,0,GREEN,0,0,0,GREEN,0,0,0,RED},
+    {RED,0,0,0,0,0,WHITE,0,0,0,WHITE,0,0,0,0,0,0,0,0,0,0,0,0,RED},
+    {RED,0,0,0,0,0,WHITE,WHITE,0,WHITE,WHITE,0,0,0,0,GREEN,0,GREEN,0,GREEN,0,0,0,RED},
     {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
     {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
     {RED,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,RED},
@@ -97,31 +100,34 @@ SDL_Window *getWindow(){
     return window;
 }
 
-SDL_Surface *loadBG(SDL_Surface *screen){
+SDL_Surface *loadTexture(char *path, SDL_Surface *screen){
     SDL_Surface *load = NULL, *opt = NULL;
 
-    load = IMG_Load("gfx/back.png");
+    load = IMG_Load(path);
     if(load == NULL){
         printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
         return NULL;
     }
-    opt = SDL_ConvertSurface(load, screen->format, NULL);
+    /*opt = SDL_ConvertSurface(load, screen->format, NULL);
     SDL_FreeSurface(load);
     if(opt == NULL){
         printf("Unable to optimize image! SDL Error: %s\n", SDL_GetError());
         return NULL;
     }
-    
-    return opt;
+
+    return opt;*/
+    return load;
 }
 
 void loop(SDL_Window *window){
-    SDL_Surface *screenSurface = NULL;
+    SDL_Surface *screenSurface = NULL, *texture = NULL;
     SDL_Event e;
-    int side, height, drawStart, drawEnd;
+    int side, height, drawStart, drawEnd, textx, texty;
+    double wallx;
     Player player;
     Ray ray;
     Screen screen;
+
 
     player.x = player.y = 12;
     player.dirx = 0;
@@ -135,6 +141,9 @@ void loop(SDL_Window *window){
     SDL_Rect botScreen = {.x = 0, .y = SCREEN_HEIGHT/2, .w = SCREEN_WIDTH, .h = SCREEN_HEIGHT -1};
 
     screenSurface = SDL_GetWindowSurface(window);
+    //texture = loadTexture("gfx/brick.png", screenSurface);
+    texture = SDL_LoadBMP("gfx/brick.bmp");
+
     Uint64 curTime = SDL_GetPerformanceCounter();
     Uint64 lastTime = 0;
     double dt = 0;
@@ -182,9 +191,8 @@ void loop(SDL_Window *window){
                 }
             }
         }
-        SDL_FillRect(screenSurface, &topScreen, SDL_MapRGB(screenSurface->format, 0xb20000, 0x00b200, 0x0000b2));
-        SDL_FillRect(screenSurface, &botScreen, SDL_MapRGB(screenSurface->format, 0x600000, 0x006000, 0x000060));
-        //SDL_BlitSurface(bg, NULL, screenSurface, NULL);
+        SDL_FillRect(screenSurface, &botScreen, SDL_MapRGB(screenSurface->format, 0xb20000, 0x00b200, 0x0000b2));
+        SDL_FillRect(screenSurface, &topScreen, SDL_MapRGB(screenSurface->format, 0x600000, 0x006000, 0x000060));
         for(int i = 0; i < SCREEN_WIDTH; i++){
             ray.angle = 2*i/(double) (SCREEN_WIDTH) -1;
             ray.x = player.x;
@@ -242,14 +250,27 @@ void loop(SDL_Window *window){
             if(drawStart < 0) drawStart = 0;
             if(drawEnd > SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT;
 
+            if(!side)
+                wallx = ray.y + ray.screenDist*ray.diry;
+            else
+                wallx = ray.x + ray.screenDist*ray.dirx;
+            wallx -= (int) wallx;
+
+            textx = (int) (wallx * TEXTURE_WIDTH);
+            if((!side && ray.dirx > 0) || (side && ray.diry < 0))
+                textx = TEXTURE_WIDTH - textx -1;
+
             if(SDL_MUSTLOCK(screenSurface))
                 SDL_LockSurface(screenSurface);
 
             for(int j = drawStart; j < drawEnd; j++){
-                if(side == 1)
-                    putPixel(screenSurface, i, j, worldMap[ray.gridx][ray.gridy]);
+                texty = (((j*256 - SCREEN_HEIGHT*128 + height*128) * TEXTURE_HEIGHT) / height) /256;
+                if(side)
+                    putPixel(screenSurface, i, j, getPixel(texture, textx, texty));
+                    //putPixel(screenSurface, i, j, worldMap[ray.gridx][ray.gridy]);
                 else
-                    putPixel(screenSurface, i, j, DARKER(worldMap[ray.gridx][ray.gridy], 2));
+                    putPixel(screenSurface, i, j, DARKER(getPixel(texture, textx, texty), 2));
+                    //putPixel(screenSurface, i, j, DARKER(worldMap[ray.gridx][ray.gridy], 2));
             }
 
             if(SDL_MUSTLOCK(screenSurface))
@@ -259,7 +280,7 @@ void loop(SDL_Window *window){
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
-        printf("FPS: %lf\n", 1/dt);
+        //printf("FPS: %lf\n", 1/dt);
         //printf("x: %lf - y: %lf\n", player.x, player.y);
         SDL_UpdateWindowSurface(window);
     }

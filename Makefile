@@ -14,3 +14,6 @@ all:
 
 clean:
 	rm $(OBJ_NAME)
+
+run: all
+	./main
