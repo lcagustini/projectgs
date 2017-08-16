@@ -19,6 +19,10 @@
 #include "gfx.h"
 #include "input.h"
 
+#define SCREEN_DIST 0.666666
+#define PERPENDICULAR_X(x, y) SCREEN_DIST*y
+#define PERPENDICULAR_Y(x, y) -SCREEN_DIST*x
+
 int worldMap[mapWidth][mapHeight]=
 {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -48,13 +52,13 @@ int worldMap[mapWidth][mapHeight]=
 };
 
 void initPlayer(Player *p){
-    p->x = p->y = 12;
-    p->dirx = 0;
-    p->diry = 1;
+    p->x = p->y = 15;
+    p->dirx = -1;
+    p->diry = 0;
     p->speed = 200;
 
-    p->screenx = 0.66;
-    p->screeny = 0;
+    p->screenx = PERPENDICULAR_X(p->dirx, p->diry);
+    p->screeny = PERPENDICULAR_Y(p->dirx, p->diry);
 }
 
 void loop(SDL_Window *window){
@@ -109,7 +113,7 @@ void loop(SDL_Window *window){
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
-        //printf("FPS: %lf\n", 1/dt);
+        printf("FPS: %lf\n", 1/dt);
         //printf("x: %lf - y: %lf\n", player.x, player.y);
         SDL_UpdateWindowSurface(window);
     }

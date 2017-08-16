@@ -6,5 +6,4 @@ A game with no real goal but to replicate the Ray Casting engine used in Wolfens
 
 *Requires SDL2*
 
-`make`
-`./main`
+`make run`
