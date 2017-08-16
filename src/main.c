@@ -1,20 +1,23 @@
+#ifndef SDL
+
+#define SDL
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#endif
+
+#ifndef TYPES
+
+#define TYPES
+#include "types.h"
+
+#endif
+
 #include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
-
-#define TEXTURE_WIDTH 16
-#define TEXTURE_HEIGHT 16
-
-#define mapWidth 24
-#define mapHeight 24
-
-#define DARKER(a, b) (((a & 0xFF0000)/b) & 0xFF0000) + (((a & 0x00FF00)/b) & 0x00FF00) + (((a & 0x0000FF)/b) & 0x0000FF)
+#include "ray.h"
+#include "gfx.h"
+#include "input.h"
 
 int worldMap[mapWidth][mapHeight]=
 {
@@ -44,246 +47,72 @@ int worldMap[mapWidth][mapHeight]=
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-typedef struct{
-    double x, y;
-    double dirx, diry;
-    double speed;
-} Player;
+void initPlayer(Player *p){
+    p->x = p->y = 12;
+    p->dirx = 0;
+    p->diry = 1;
+    p->speed = 200;
 
-typedef struct{
-    double x, y;
-    double dirx, diry;
-    double angle;
-    int gridx, gridy;
-    double distx, disty;
-    double deltax, deltay;
-    double screenDist;
-    int stepx, stepy;
-} Ray;
-
-typedef struct{
-    double x, y;
-} Screen;
-
-Uint32 getPixel(SDL_Surface *surface, int x, int y){
-    Uint32 *pixels = (Uint32 *)surface->pixels;
-    return pixels[(y*surface->w) + x];
-}
-
-void putPixel(SDL_Surface *surface, int x, int y, Uint32 pixel){
-    Uint32 *pixels = (Uint32 *)surface->pixels;
-    pixels[(y*surface->w) + x] = pixel;
-}
-
-SDL_Window *getWindow(){
-    SDL_Window *window = NULL;
-
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
-        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        return NULL;
-    }
-    window = SDL_CreateWindow("projectgs", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if(window == NULL){
-        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-        return NULL;
-    }
-    if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)){
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-        return NULL;
-    }
-    return window;
-}
-
-SDL_Surface *loadTexture(char *path, SDL_Surface *screen){
-    SDL_Surface *load = NULL, *opt = NULL;
-
-    load = IMG_Load(path);
-    if(load == NULL){
-        printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
-        return NULL;
-    }
-    opt = SDL_ConvertSurface(load, screen->format, NULL);
-    SDL_FreeSurface(load);
-    if(opt == NULL){
-        printf("Unable to optimize image! SDL Error: %s\n", SDL_GetError());
-        return NULL;
-    }
-
-    return opt;
+    p->screenx = 0.66;
+    p->screeny = 0;
 }
 
 void loop(SDL_Window *window){
-    SDL_Surface *screenSurface = NULL;
     SDL_Event e;
-    int side, height, drawStart, drawEnd, textx, texty;
-    double wallx;
+
+    double depth[SCREEN_WIDTH];
+
     Player player;
-    Ray ray;
-    Screen screen;
+
+    SDL_Surface *screenSurface = NULL;
     SDL_Surface *textures[5];
 
-    player.x = player.y = 12;
-    player.dirx = 0;
-    player.diry = 1;
-    player.speed = 200;
+    SDL_Surface *spriteText[1];
+    Sprite blastoise;
 
-    screen.x = 0.66;
-    screen.y = 0;
+    screenSurface = SDL_GetWindowSurface(window);
+
+    initPlayer(&player);
+    initGfx(textures, spriteText, screenSurface);
 
     SDL_Rect topScreen = {.x = 0, .y = 0, .w = SCREEN_WIDTH, .h = SCREEN_HEIGHT/2 -1};
     SDL_Rect botScreen = {.x = 0, .y = SCREEN_HEIGHT/2, .w = SCREEN_WIDTH, .h = SCREEN_HEIGHT -1};
 
-    screenSurface = SDL_GetWindowSurface(window);
-
-    textures[0] = loadTexture("gfx/brick.png", screenSurface);
-    textures[1] = loadTexture("gfx/wood.png", screenSurface);
-    textures[2] = loadTexture("gfx/stone.png", screenSurface);
-    textures[3] = loadTexture("gfx/sand.png", screenSurface);
-    textures[4] = loadTexture("gfx/pumpkin.png", screenSurface);
-
     Uint64 curTime = SDL_GetPerformanceCounter();
     Uint64 lastTime = 0;
     double dt = 0;
-    double aux;
-    while(true){
+    while(1){
         while(SDL_PollEvent(&e)){
             if(e.type == SDL_QUIT){
                 return;
             }
             else if(e.type == SDL_KEYDOWN){
-                switch(e.key.keysym.sym){
-                    case SDLK_UP:
-                        if(!worldMap[(int) (player.x + player.dirx * player.speed *dt)][(int) player.y]) player.x += player.dirx * player.speed *dt;
-                        if(!worldMap[(int) player.x][(int) (player.y + player.diry * player.speed *dt)]) player.y += player.diry * player.speed *dt;
-                        break;
-
-                    case SDLK_DOWN:
-                        if(!worldMap[(int) (player.x - player.dirx * player.speed *dt)][(int) player.y]) player.x -= player.dirx * player.speed *dt;
-                        if(!worldMap[(int) player.x][(int) (player.y - player.diry * player.speed *dt)]) player.y -= player.diry * player.speed *dt;
-                        break;
-
-                    case SDLK_RIGHT:
-                        aux = player.dirx;
-                        player.dirx = player.dirx * cos(-player.speed *dt/3) - player.diry * sin(-player.speed *dt/3);
-                        player.diry = aux * sin(-player.speed *dt/3) + player.diry * cos(-player.speed *dt/3);
-
-                        aux = screen.x;
-                        screen.x = screen.x * cos(-player.speed *dt/3) - screen.y * sin(-player.speed *dt/3);
-                        screen.y = aux * sin(-player.speed *dt/3) + screen.y * cos(-player.speed *dt/3);
-                        break;
-
-                    case SDLK_LEFT:
-                        aux = player.dirx;
-                        player.dirx = player.dirx * cos(player.speed *dt/3) - player.diry * sin(player.speed *dt/3);
-                        player.diry = aux * sin(player.speed *dt/3) + player.diry * cos(player.speed *dt/3);
-
-                        aux = screen.x;
-                        screen.x = screen.x * cos(player.speed *dt/3) - screen.y * sin(player.speed *dt/3);
-                        screen.y = aux * sin(player.speed *dt/3) + screen.y * cos(player.speed *dt/3);
-                        break;
-
-                    default:
-                        printf("A");
-                        break;
-                }
+                handleKeys(worldMap, &player, dt, e);
             }
         }
+
         SDL_FillRect(screenSurface, &botScreen, SDL_MapRGB(screenSurface->format, 0xb20000, 0x00b200, 0x0000b2));
         SDL_FillRect(screenSurface, &topScreen, SDL_MapRGB(screenSurface->format, 0x600000, 0x006000, 0x000060));
+
+        Ray ray;
         for(int i = 0; i < SCREEN_WIDTH; i++){
-            ray.angle = 2*i/(double) (SCREEN_WIDTH) -1;
-            ray.x = player.x;
-            ray.y = player.y;
-            ray.dirx = player.dirx + screen.x*ray.angle;
-            ray.diry = player.diry + screen.y*ray.angle;
+            initRay(&ray, i, player);
 
-            ray.gridx = (int) player.x;
-            ray.gridy = (int) player.y;
+            rayDDA(worldMap, &ray);
+            drawCastedWall(worldMap, &ray, i, textures, screenSurface);
 
-            ray.deltax = sqrt(1 + (ray.diry * ray.diry) / (ray.dirx * ray.dirx));
-            ray.deltay = sqrt(1 + (ray.dirx * ray.dirx) / (ray.diry * ray.diry));
-
-            if(ray.dirx < 0){
-                ray.stepx = -1;
-                ray.distx = (ray.x - ray.gridx) * ray.deltax;
-            }
-            else{
-                ray.stepx = 1;
-                ray.distx = (ray.gridx - ray.x +1) * ray.deltax;
-            }
-            if(ray.diry < 0){
-                ray.stepy = -1;
-                ray.disty = (ray.y - ray.gridy) * ray.deltay;
-            }
-            else{
-                ray.stepy = 1;
-                ray.disty = (ray.gridy - ray.y +1) * ray.deltay;
-            }
-
-            while(true){
-                if(ray.distx < ray.disty){
-                    ray.distx += ray.deltax;
-                    ray.gridx += ray.stepx;
-                    side = 0;
-                }
-                else{
-                    ray.disty += ray.deltay;
-                    ray.gridy += ray.stepy;
-                    side = 1;
-                }
-                if(worldMap[ray.gridx][ray.gridy])
-                    break;
-            }
-
-            if(!side)
-                ray.screenDist = (ray.gridx - ray.x + (1 - ray.stepx) / 2) / ray.dirx;
-            else
-                ray.screenDist = (ray.gridy - ray.y + (1 - ray.stepy) / 2) / ray.diry;
-
-            height = (int) SCREEN_HEIGHT/ray.screenDist;
-
-            drawStart = SCREEN_HEIGHT/2 - height/2;
-            drawEnd = drawStart + height;
-            if(drawStart < 0) drawStart = 0;
-            if(drawEnd > SCREEN_HEIGHT) drawEnd = SCREEN_HEIGHT;
-
-            if(!side)
-                wallx = ray.y + ray.screenDist*ray.diry;
-            else
-                wallx = ray.x + ray.screenDist*ray.dirx;
-            wallx -= (int) wallx;
-
-            textx = (int) (wallx * TEXTURE_WIDTH);
-            if((!side && ray.dirx > 0) || (side && ray.diry < 0))
-                textx = TEXTURE_WIDTH - textx -1;
-
-            if(SDL_MUSTLOCK(screenSurface))
-                SDL_LockSurface(screenSurface);
-
-            for(int j = drawStart; j < drawEnd; j++){
-                texty = (((j*256 - SCREEN_HEIGHT*128 + height*128) * TEXTURE_HEIGHT) / height) /256;
-                if(side)
-                    putPixel(screenSurface, i, j, getPixel(textures[worldMap[ray.gridx][ray.gridy] -1], textx, texty));
-                else
-                    putPixel(screenSurface, i, j, DARKER(getPixel(textures[worldMap[ray.gridx][ray.gridy] -1], textx, texty), 2));
-            }
-
-            if(SDL_MUSTLOCK(screenSurface))
-                SDL_UnlockSurface(screenSurface);
+            depth[i] = ray.screenDist;
         }
+
+        SDL_BlitSurface(spriteText[0], NULL, screenSurface, NULL);
 
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
-        printf("FPS: %lf\n", 1/dt);
+        //printf("FPS: %lf\n", 1/dt);
         //printf("x: %lf - y: %lf\n", player.x, player.y);
         SDL_UpdateWindowSurface(window);
     }
-}
-
-void exitWindow(SDL_Window *window){
-    SDL_DestroyWindow(window);
-    SDL_Quit();
 }
 
 int main(int argc, char* args[]){
