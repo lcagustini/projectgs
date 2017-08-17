@@ -17,4 +17,4 @@
 
 void initRay(Ray *ray, int id, Player player);
 void rayDDA(int worldMap[][MAP_HEIGHT], Ray *ray);
-void drawCastedWall(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface);
+void drawCastedStrip(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurfacel, Player *player);

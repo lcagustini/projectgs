@@ -49,8 +49,46 @@ void rayDDA(int worldMap[][MAP_HEIGHT], Ray *ray){
     }
 }
 
-void drawCastedWall(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface){
-    Vertdraw strip;
+void drawCastedFloor(Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface, Player *player, Vertdraw *strip){
+    Floordraw floor;
+
+    if(!ray->side && ray->dirx > 0){
+        floor.wallx = ray->gridx;
+        floor.wally = ray->gridy + strip->wallx;
+    }
+    else if(!ray->side && ray->dirx < 0){
+        floor.wallx = ray->gridx + 1;
+        floor.wally = ray->gridy + strip->wallx;
+    }
+    else if(ray->side && ray->diry > 0){
+        floor.wallx = ray->gridx + strip->wallx;
+        floor.wally = ray->gridy;
+    }
+    else{
+        floor.wallx = ray->gridx + strip->wallx;
+        floor.wally = ray->gridy + 1;
+    }
+
+    for(int j = strip->drawEnd +1; j < SCREEN_HEIGHT; j++){
+        floor.dist = SCREEN_HEIGHT / (2.0*j - SCREEN_HEIGHT);
+
+        floor.w = floor.dist/ray->screenDist;
+
+        floor.x = floor.w*floor.wallx + (1 - floor.w)*player->x;
+        floor.y = floor.w*floor.wally + (1 - floor.w)*player->y;
+
+        floor.textx = (int) (floor.x * textures[0]->w) % textures[0]->w;
+        floor.texty = (int) (floor.y * textures[0]->h) % textures[0]->h;
+
+        floor.ctextx = (int) (floor.x * textures[1]->w) % textures[1]->w;
+        floor.ctexty = (int) (floor.y * textures[1]->h) % textures[1]->h;
+
+        putPixel(screenSurface, id, j, getPixel(textures[0], floor.textx, floor.texty));
+        putPixel(screenSurface, id, SCREEN_HEIGHT - j, getPixel(textures[1], floor.ctextx, floor.ctexty));
+    }
+}
+
+void drawCastedWall(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface, Vertdraw *strip){
     SDL_Surface *texture;
 
     //Projects the casted ray position to the screen vector
@@ -60,41 +98,47 @@ void drawCastedWall(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **
         ray->screenDist = (ray->gridy - ray->y + (1 - ray->stepy) / 2) / ray->diry;
 
     //Gets the height of the casted wall and calculate drawing points
-    strip.height = (int) SCREEN_HEIGHT/ray->screenDist;
+    strip->height = (int) SCREEN_HEIGHT/ray->screenDist;
 
-    strip.drawStart = SCREEN_HEIGHT/2 - strip.height/2;
-    strip.drawEnd = strip.drawStart + strip.height;
-    if(strip.drawStart < 0) strip.drawStart = 0;
-    if(strip.drawEnd > SCREEN_HEIGHT) strip.drawEnd = SCREEN_HEIGHT;
+    strip->drawStart = SCREEN_HEIGHT/2 - strip->height/2;
+    strip->drawEnd = strip->drawStart + strip->height;
+    if(strip->drawStart < 0) strip->drawStart = 0;
+    if(strip->drawEnd > SCREEN_HEIGHT) strip->drawEnd = SCREEN_HEIGHT;
 
     //Calculates where in the wall tile the ray hit
     if(!ray->side)
-        strip.wallx = ray->y + ray->screenDist*ray->diry;
+        strip->wallx = ray->y + ray->screenDist*ray->diry;
     else
-        strip.wallx = ray->x + ray->screenDist*ray->dirx;
-    strip.wallx -= (int) strip.wallx;
+        strip->wallx = ray->x + ray->screenDist*ray->dirx;
+    strip->wallx -= (int) strip->wallx;
 
     //Get current texture
     texture = textures[worldMap[ray->gridx][ray->gridy] -1];
 
     //Calculates which x of the wall texture should be rendered
-    strip.textx = (int) (strip.wallx * texture->w);
+    strip->textx = (int) (strip->wallx * texture->w);
     if((!ray->side && ray->dirx > 0) || (ray->side && ray->diry < 0))
-        strip.textx = texture->w - strip.textx -1;
+        strip->textx = texture->w - strip->textx -1;
 
     if(SDL_MUSTLOCK(screenSurface))
         SDL_LockSurface(screenSurface);
 
     //Goes through the texture vertically and draws to the screen surface
-    for(int j = strip.drawStart; j < strip.drawEnd; j++){
-        strip.texty = (((j*256 - SCREEN_HEIGHT*128 + strip.height*128) * texture->h) / strip.height) /256;
+    for(int j = strip->drawStart; j < strip->drawEnd; j++){
+        strip->texty = (((j*256 - SCREEN_HEIGHT*128 + strip->height*128) * texture->h) / strip->height) /256;
         if(ray->side)
-            putPixel(screenSurface, id, j, getPixel(textures[worldMap[ray->gridx][ray->gridy] -1], strip.textx, strip.texty));
+            putPixel(screenSurface, id, j, getPixel(textures[worldMap[ray->gridx][ray->gridy] -1], strip->textx, strip->texty));
         else
-            putPixel(screenSurface, id, j, DARKER(getPixel(textures[worldMap[ray->gridx][ray->gridy] -1], strip.textx, strip.texty), 2));
+            putPixel(screenSurface, id, j, DARKER(getPixel(textures[worldMap[ray->gridx][ray->gridy] -1], strip->textx, strip->texty), 2));
     }
-
 
     if(SDL_MUSTLOCK(screenSurface))
         SDL_UnlockSurface(screenSurface);
+}
+
+void drawCastedStrip(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface, Player *player){
+    Vertdraw strip;
+
+    drawCastedWall(worldMap, ray, id, textures, screenSurface, &strip);
+    drawCastedFloor(ray, id, textures, screenSurface, player, &strip);
 }

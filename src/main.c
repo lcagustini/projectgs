@@ -28,30 +28,30 @@
 
 int worldMap[MAP_WIDTH][MAP_HEIGHT]=
 {
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-    {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-    {1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    {6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,7,7,7,7,7,0,0,0,0,3,0,3,0,3,0,0,0,6},
+    {6,0,0,0,0,0,7,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,7,0,0,0,7,0,0,0,0,3,0,0,0,3,0,0,0,6},
+    {6,0,0,0,0,0,7,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,7,7,0,7,7,0,0,0,0,3,0,3,0,3,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
+    {6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6}
 };
 
 void initPlayer(Player *p){
@@ -99,10 +99,10 @@ void loop(SDL_Window *window){
     Player player;
 
     SDL_Surface *screenSurface = NULL;
-    SDL_Surface *textures[5];
+    SDL_Surface *textures[WALL_TEXT_NUM];
 
     SDL_Surface *spriteText[SPRITE_NUM];
-    Sprite sprites[SPRITE_NUM] = {{.x = 20, .y = 12, .text = 0}, {.x = 12, .y = 20, .text = 0}};
+    Sprite sprites[SPRITE_NUM] = {{.x = 20, .y = 12, .z = 0, .text = 0}, {.x = 12, .y = 20, .z = 0, .text = 0}};
 
     Vertdraw spriteVert;
     Horizodraw spriteHorizo;
@@ -137,7 +137,7 @@ void loop(SDL_Window *window){
             initRay(&ray, i, player);
 
             rayDDA(worldMap, &ray);
-            drawCastedWall(worldMap, &ray, i, textures, screenSurface);
+            drawCastedStrip(worldMap, &ray, i, textures, screenSurface, &player);
 
             depth[i] = ray.screenDist;
         }
@@ -163,6 +163,7 @@ void loop(SDL_Window *window){
             if(spriteVert.drawEnd > SCREEN_HEIGHT) spriteVert.drawEnd = SCREEN_HEIGHT;
 
             spriteHorizo.width = spriteVert.height;
+            spriteHorizo.height = (int) (sprites[k].z/sprites[k].screeny);
 
             spriteHorizo.drawStart = sprites[k].screenx - spriteHorizo.width/2;
             spriteHorizo.drawEnd = spriteHorizo.drawStart + spriteHorizo.width;
@@ -173,7 +174,7 @@ void loop(SDL_Window *window){
                 spriteVert.textx = (int) (256 * (i - (sprites[k].screenx - spriteHorizo.width/2)) * spriteText[sprites[k].text]->w/spriteHorizo.width) /256;
                 if(sprites[k].screeny > 0 && sprites[k].screeny < depth[i]){
                     for(int j = spriteVert.drawStart; j < spriteVert.drawEnd; j++){
-                        spriteVert.texty = (((j*256 - SCREEN_HEIGHT*128 + spriteVert.height*128) * spriteText[sprites[k].text]->h) / spriteVert.height) /256;
+                        spriteVert.texty = ((((j - spriteHorizo.height)*256 - SCREEN_HEIGHT*128 + spriteVert.height*128) * spriteText[sprites[k].text]->h) / spriteVert.height) /256;
                         color = getPixel(spriteText[sprites[k].text], spriteVert.textx, spriteVert.texty);
                         if(color != 0xFF00FF)
                             putPixel(screenSurface, i, j, color);
@@ -185,7 +186,7 @@ void loop(SDL_Window *window){
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
-        //printf("FPS: %lf\n", 1/dt);
+        printf("FPS: %lf\n", 1/dt);
         //printf("x: %lf - y: %lf\n", player.x, player.y);
         SDL_UpdateWindowSurface(window);
     }

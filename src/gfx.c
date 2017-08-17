@@ -3,11 +3,13 @@
 void initGfx(SDL_Surface **textures, SDL_Surface **sprites, SDL_Surface *screen){
     sprites[0] = loadTexture("gfx/blastoise.png", screen);
 
-    textures[0] = loadTexture("gfx/brick.png", screen);
-    textures[1] = loadTexture("gfx/wood.png", screen);
-    textures[2] = loadTexture("gfx/stone.png", screen);
-    textures[3] = loadTexture("gfx/sand.png", screen);
-    textures[4] = loadTexture("gfx/pumpkin.png", screen);
+    textures[0] = loadTexture("gfx/floor.jpg", screen);
+    textures[1] = loadTexture("gfx/ceil.jpg", screen);
+    textures[2] = loadTexture("gfx/brick.png", screen);
+    textures[3] = loadTexture("gfx/wood.png", screen);
+    textures[4] = loadTexture("gfx/stone.png", screen);
+    textures[5] = loadTexture("gfx/sand.png", screen);
+    textures[6] = loadTexture("gfx/pumpkin.png", screen);
 }
 
 Uint32 getPixel(SDL_Surface *surface, int x, int y){

@@ -5,9 +5,10 @@
 #define MAP_HEIGHT 24
 
 #define SPRITE_NUM 2
+#define WALL_TEXT_NUM 7
 
 typedef struct{
-    double x, y;
+    double x, y, z;
     int text;
     double screenx, screeny;
     double dist;
@@ -40,6 +41,14 @@ typedef struct{
 } Vertdraw;
 
 typedef struct{
-    int width;
+    int width, height;
     int drawStart, drawEnd;
 } Horizodraw;
+
+typedef struct{
+    double x, y;
+    int textx, texty;
+    int ctextx, ctexty;
+    double wallx, wally;
+    double dist, w;
+} Floordraw;
