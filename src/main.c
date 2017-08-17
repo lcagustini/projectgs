@@ -64,6 +64,33 @@ void initPlayer(Player *p){
     p->screeny = PERPENDICULAR_Y(p->dirx, p->diry);
 }
 
+void spriteSort(Sprite *sprites, int start, int end){
+   int i, j;
+   Sprite pivot, t;
+
+   if(start < end){
+       pivot = sprites[start];
+       i = start;
+       j = end+1;
+
+       while(1){
+           do ++i; while(sprites[i].dist >= pivot.dist && i <= end);
+           do --j; while(sprites[j].dist < pivot.dist);
+           if(i >= j) break;
+
+           t = sprites[i];
+           sprites[i] = sprites[j];
+           sprites[j] = t;
+       }
+       t = sprites[start];
+       sprites[start] = sprites[j];
+       sprites[j] = t;
+
+       spriteSort(sprites, start, j-1);
+       spriteSort(sprites, j+1, end);
+   }
+}
+
 void loop(SDL_Window *window){
     SDL_Event e;
     double depth[SCREEN_WIDTH];
@@ -75,8 +102,7 @@ void loop(SDL_Window *window){
     SDL_Surface *textures[5];
 
     SDL_Surface *spriteText[SPRITE_NUM];
-    double spriteDist[SPRITE_NUM];
-    Sprite sprites[SPRITE_NUM] = {{.x = 20, .y = 12, .text = 0}};
+    Sprite sprites[SPRITE_NUM] = {{.x = 20, .y = 12, .text = 0}, {.x = 12, .y = 20, .text = 0}};
 
     Vertdraw spriteVert;
     Horizodraw spriteHorizo;
@@ -119,8 +145,11 @@ void loop(SDL_Window *window){
         for(int k = 0; k < SPRITE_NUM; k++){
             sprites[k].screenx = sprites[k].x - player.x;
             sprites[k].screeny = sprites[k].y - player.y;
-            spriteDist[0] = sprites[k].screenx*sprites[k].screenx - sprites[k].screeny*sprites[k].screeny;
+            sprites[k].dist = sprites[k].screenx*sprites[k].screenx + sprites[k].screeny*sprites[k].screeny;
+        }
+        spriteSort(sprites, 0, SPRITE_NUM -1);
 
+        for(int k = 0; k < SPRITE_NUM; k++){
             aux = sprites[k].screenx;
             sprites[k].screenx = PROJECT_X(aux, sprites[k].screeny, player.dirx, player.diry, player.screenx, player.screeny);
             sprites[k].screeny = PROJECT_Y(aux, sprites[k].screeny, player.dirx, player.diry, player.screenx, player.screeny);

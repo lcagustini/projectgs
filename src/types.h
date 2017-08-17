@@ -4,12 +4,13 @@
 #define MAP_WIDTH 24
 #define MAP_HEIGHT 24
 
-#define SPRITE_NUM 1
+#define SPRITE_NUM 2
 
 typedef struct{
     double x, y;
     int text;
     double screenx, screeny;
+    double dist;
 } Sprite;
 
 typedef struct{
