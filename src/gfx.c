@@ -1,7 +1,7 @@
 #include "gfx.h"
 
 void initGfx(SDL_Surface **textures, SDL_Surface **sprites, SDL_Surface *screen){
-    sprites[0] = loadSprite("gfx/blastoise.png", screen);
+    sprites[0] = loadTexture("gfx/blastoise.png", screen);
 
     textures[0] = loadTexture("gfx/brick.png", screen);
     textures[1] = loadTexture("gfx/wood.png", screen);
@@ -44,17 +44,6 @@ void exitWindow(SDL_Window *window){
     SDL_Quit();
 }
 
-SDL_Surface *loadSprite(char *path, SDL_Surface *screen){
-    SDL_Surface *load = NULL;
-
-    load = IMG_Load(path);
-    if(load == NULL){
-        printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
-        return NULL;
-    }
-    return load;
-}
-
 SDL_Surface *loadTexture(char *path, SDL_Surface *screen){
     SDL_Surface *load = NULL, *opt = NULL;
 
@@ -63,7 +52,7 @@ SDL_Surface *loadTexture(char *path, SDL_Surface *screen){
         printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
         return NULL;
     }
-    opt = SDL_ConvertSurface(load, screen->format, NULL);
+    opt = SDL_ConvertSurface(load, screen->format, 0);
     SDL_FreeSurface(load);
     if(opt == NULL){
         printf("Unable to optimize image! SDL Error: %s\n", SDL_GetError());

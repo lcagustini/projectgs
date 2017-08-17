@@ -13,8 +13,9 @@
 
 #endif
 
+void initGfx(SDL_Surface **textures, SDL_Surface **sprites, SDL_Surface *screen);
 Uint32 getPixel(SDL_Surface *surface, int x, int y);
 void putPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 SDL_Window *getWindow();
-SDL_Surface *loadSprite(char *path, SDL_Surface *screen);
+void exitWindow(SDL_Window *window);
 SDL_Surface *loadTexture(char *path, SDL_Surface *screen);

@@ -1,4 +1,5 @@
 #include "ray.h"
+#include "gfx.h"
 
 void initRay(Ray *ray, int id, Player player){
     ray->angle = 2*id/(double) (SCREEN_WIDTH) -1;
@@ -31,7 +32,7 @@ void initRay(Ray *ray, int id, Player player){
     }
 }
 
-void rayDDA(int worldMap[][mapHeight], Ray *ray){
+void rayDDA(int worldMap[][MAP_HEIGHT], Ray *ray){
     while(1){
         if(ray->distx < ray->disty){
             ray->distx += ray->deltax;
@@ -48,8 +49,9 @@ void rayDDA(int worldMap[][mapHeight], Ray *ray){
     }
 }
 
-void drawCastedWall(int worldMap[][mapHeight], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface){
+void drawCastedWall(int worldMap[][MAP_HEIGHT], Ray *ray, int id, SDL_Surface **textures, SDL_Surface *screenSurface){
     Vertdraw strip;
+    SDL_Surface *texture;
 
     //Projects the casted ray position to the screen vector
     if(!ray->side)
@@ -72,17 +74,20 @@ void drawCastedWall(int worldMap[][mapHeight], Ray *ray, int id, SDL_Surface **t
         strip.wallx = ray->x + ray->screenDist*ray->dirx;
     strip.wallx -= (int) strip.wallx;
 
+    //Get current texture
+    texture = textures[worldMap[ray->gridx][ray->gridy] -1];
+
     //Calculates which x of the wall texture should be rendered
-    strip.textx = (int) (strip.wallx * TEXTURE_WIDTH);
+    strip.textx = (int) (strip.wallx * texture->w);
     if((!ray->side && ray->dirx > 0) || (ray->side && ray->diry < 0))
-        strip.textx = TEXTURE_WIDTH - strip.textx -1;
+        strip.textx = texture->w - strip.textx -1;
 
     if(SDL_MUSTLOCK(screenSurface))
         SDL_LockSurface(screenSurface);
 
     //Goes through the texture vertically and draws to the screen surface
     for(int j = strip.drawStart; j < strip.drawEnd; j++){
-        strip.texty = (((j*256 - SCREEN_HEIGHT*128 + strip.height*128) * TEXTURE_HEIGHT) / strip.height) /256;
+        strip.texty = (((j*256 - SCREEN_HEIGHT*128 + strip.height*128) * texture->h) / strip.height) /256;
         if(ray->side)
             putPixel(screenSurface, id, j, getPixel(textures[worldMap[ray->gridx][ray->gridy] -1], strip.textx, strip.texty));
         else

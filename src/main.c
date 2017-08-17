@@ -23,7 +23,10 @@
 #define PERPENDICULAR_X(x, y) SCREEN_DIST*y
 #define PERPENDICULAR_Y(x, y) -SCREEN_DIST*x
 
-int worldMap[mapWidth][mapHeight]=
+#define PROJECT_X(x, y, dirx, diry, screenx, screeny) (diry*x - dirx*y)/(screenx*diry - screeny*dirx)
+#define PROJECT_Y(x, y, dirx, diry, screenx, screeny) (screenx*y - screeny*x)/(screenx*diry - screeny*dirx)
+
+int worldMap[MAP_WIDTH][MAP_HEIGHT]=
 {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -63,16 +66,21 @@ void initPlayer(Player *p){
 
 void loop(SDL_Window *window){
     SDL_Event e;
-
     double depth[SCREEN_WIDTH];
+    double aux;
 
     Player player;
 
     SDL_Surface *screenSurface = NULL;
     SDL_Surface *textures[5];
 
-    SDL_Surface *spriteText[1];
-    Sprite blastoise;
+    SDL_Surface *spriteText[SPRITE_NUM];
+    double spriteDist[SPRITE_NUM];
+    Sprite sprites[SPRITE_NUM] = {{.x = 20, .y = 12, .text = 0}};
+
+    Vertdraw spriteVert;
+    Horizodraw spriteHorizo;
+    Uint32 color;
 
     screenSurface = SDL_GetWindowSurface(window);
 
@@ -95,8 +103,8 @@ void loop(SDL_Window *window){
             }
         }
 
-        SDL_FillRect(screenSurface, &botScreen, SDL_MapRGB(screenSurface->format, 0xb20000, 0x00b200, 0x0000b2));
-        SDL_FillRect(screenSurface, &topScreen, SDL_MapRGB(screenSurface->format, 0x600000, 0x006000, 0x000060));
+        SDL_FillRect(screenSurface, &botScreen, SDL_MapRGB(screenSurface->format, 0xb2, 0xb2, 0xb2));
+        SDL_FillRect(screenSurface, &topScreen, SDL_MapRGB(screenSurface->format, 0x60, 0x60, 0x60));
 
         Ray ray;
         for(int i = 0; i < SCREEN_WIDTH; i++){
@@ -108,12 +116,47 @@ void loop(SDL_Window *window){
             depth[i] = ray.screenDist;
         }
 
-        SDL_BlitSurface(spriteText[0], NULL, screenSurface, NULL);
+        for(int k = 0; k < SPRITE_NUM; k++){
+            sprites[k].screenx = sprites[k].x - player.x;
+            sprites[k].screeny = sprites[k].y - player.y;
+            spriteDist[0] = sprites[k].screenx*sprites[k].screenx - sprites[k].screeny*sprites[k].screeny;
+
+            aux = sprites[k].screenx;
+            sprites[k].screenx = PROJECT_X(aux, sprites[k].screeny, player.dirx, player.diry, player.screenx, player.screeny);
+            sprites[k].screeny = PROJECT_Y(aux, sprites[k].screeny, player.dirx, player.diry, player.screenx, player.screeny);
+
+            sprites[k].screenx = (int) ((SCREEN_WIDTH/2) * (sprites[k].screenx/sprites[k].screeny +1));
+            spriteVert.height = abs((int) (SCREEN_HEIGHT/sprites[k].screeny));
+
+            spriteVert.drawStart = SCREEN_HEIGHT/2 - spriteVert.height/2;
+            spriteVert.drawEnd = spriteVert.drawStart + spriteVert.height;
+            if(spriteVert.drawStart < 0) spriteVert.drawStart = 0;
+            if(spriteVert.drawEnd > SCREEN_HEIGHT) spriteVert.drawEnd = SCREEN_HEIGHT;
+
+            spriteHorizo.width = spriteVert.height;
+
+            spriteHorizo.drawStart = sprites[k].screenx - spriteHorizo.width/2;
+            spriteHorizo.drawEnd = spriteHorizo.drawStart + spriteHorizo.width;
+            if(spriteHorizo.drawStart < 0) spriteHorizo.drawStart = 0;
+            if(spriteHorizo.drawEnd > SCREEN_WIDTH) spriteHorizo.drawEnd = SCREEN_WIDTH;
+
+            for(int i = spriteHorizo.drawStart; i < spriteHorizo.drawEnd; i++){
+                spriteVert.textx = (int) (256 * (i - (sprites[k].screenx - spriteHorizo.width/2)) * spriteText[sprites[k].text]->w/spriteHorizo.width) /256;
+                if(sprites[k].screeny > 0 && sprites[k].screeny < depth[i]){
+                    for(int j = spriteVert.drawStart; j < spriteVert.drawEnd; j++){
+                        spriteVert.texty = (((j*256 - SCREEN_HEIGHT*128 + spriteVert.height*128) * spriteText[sprites[k].text]->h) / spriteVert.height) /256;
+                        color = getPixel(spriteText[sprites[k].text], spriteVert.textx, spriteVert.texty);
+                        if(color != 0xFF00FF)
+                            putPixel(screenSurface, i, j, color);
+                    }
+                }
+            }
+        }
 
         lastTime = curTime;
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
-        printf("FPS: %lf\n", 1/dt);
+        //printf("FPS: %lf\n", 1/dt);
         //printf("x: %lf - y: %lf\n", player.x, player.y);
         SDL_UpdateWindowSurface(window);
     }

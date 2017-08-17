@@ -1,15 +1,15 @@
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
-#define TEXTURE_WIDTH 16
-#define TEXTURE_HEIGHT 16
+#define MAP_WIDTH 24
+#define MAP_HEIGHT 24
 
-#define mapWidth 24
-#define mapHeight 24
+#define SPRITE_NUM 1
 
 typedef struct{
     double x, y;
     int text;
+    double screenx, screeny;
 } Sprite;
 
 typedef struct{
@@ -37,3 +37,8 @@ typedef struct{
     int textx, texty;
     double wallx;
 } Vertdraw;
+
+typedef struct{
+    int width;
+    int drawStart, drawEnd;
+} Horizodraw;

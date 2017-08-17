@@ -1,6 +1,6 @@
 #include "input.h"
 
-void handleKeys(int worldMap[][mapHeight], Player *p, double dt, SDL_Event e){
+void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt, SDL_Event e){
     double aux;
 
     switch(e.key.keysym.sym){

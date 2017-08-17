@@ -3,7 +3,7 @@ OBJS = $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 
 CC = gcc
 
-COMPILER_FLAGS = -w -g
+COMPILER_FLAGS = -g -Wall
 
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lm
 
