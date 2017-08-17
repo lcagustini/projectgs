@@ -29,7 +29,7 @@ SDL_Window *getWindow(){
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return NULL;
     }
-    window = SDL_CreateWindow("projectgs", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("projectgs", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN /*| SDL_WINDOW_FULLSCREEN*/);
     if(window == NULL){
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return NULL;

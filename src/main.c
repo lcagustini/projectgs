@@ -3,6 +3,7 @@
 #define SDL
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #endif
 
@@ -58,7 +59,7 @@ void initPlayer(Player *p){
     p->x = p->y = 15;
     p->dirx = -1;
     p->diry = 0;
-    p->speed = 200;
+    p->speed = 3;
 
     p->screenx = PERPENDICULAR_X(p->dirx, p->diry);
     p->screeny = PERPENDICULAR_Y(p->dirx, p->diry);
@@ -124,10 +125,11 @@ void loop(SDL_Window *window){
             if(e.type == SDL_QUIT){
                 return;
             }
-            else if(e.type == SDL_KEYDOWN){
-                handleKeys(worldMap, &player, dt, e);
+            else if(e.type == SDL_MOUSEMOTION){
+                handleMouse(&player, dt, e);
             }
         }
+        handleKeys(worldMap, &player, dt);
 
         SDL_FillRect(screenSurface, &botScreen, SDL_MapRGB(screenSurface->format, 0xb2, 0xb2, 0xb2));
         SDL_FillRect(screenSurface, &topScreen, SDL_MapRGB(screenSurface->format, 0x60, 0x60, 0x60));
