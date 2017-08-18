@@ -1,11 +1,18 @@
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 #define MAP_WIDTH 24
 #define MAP_HEIGHT 24
 
 #define SPRITE_NUM 2
 #define WALL_TEXT_NUM 7
+
+#define PROJECT_X(x, y, dirx, diry, screenx, screeny) (diry*x - dirx*y)/(screenx*diry - screeny*dirx)
+#define PROJECT_Y(x, y, dirx, diry, screenx, screeny) (screenx*y - screeny*x)/(screenx*diry - screeny*dirx)
+
+#define SCREEN_DIST 0.9
+#define PERPENDICULAR_X(x, y) SCREEN_DIST*y
+#define PERPENDICULAR_Y(x, y) -SCREEN_DIST*x
 
 typedef struct{
     double x, y, z;

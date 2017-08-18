@@ -5,7 +5,7 @@ CC = gcc
 
 COMPILER_FLAGS = -g -Wall
 
-LINKER_FLAGS = -lSDL2 -lSDL2_image -lm
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lpthread -lm
 
 OBJ_NAME = main
 

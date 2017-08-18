@@ -1,7 +1,14 @@
 #include "gfx.h"
 
-void initGfx(SDL_Surface **textures, SDL_Surface **sprites, SDL_Surface *screen){
-    sprites[0] = loadTexture("gfx/blastoise.png", screen);
+void initGfx(SDL_Surface **textures, SDL_Surface *sprites[][4], SDL_Surface *screen){
+    sprites[0][0] = loadTexture("gfx/blastoise.png", screen);
+    sprites[0][1] = loadTexture("gfx/blastoise.png", screen);
+    sprites[0][2] = loadTexture("gfx/blastoise.png", screen);
+    sprites[0][3] = loadTexture("gfx/blastoise.png", screen);
+    sprites[1][0] = loadTexture("gfx/rayquazaFront1.png", screen);
+    sprites[1][1] = loadTexture("gfx/rayquazaLeft1.png", screen);
+    sprites[1][2] = loadTexture("gfx/rayquazaBack1.png", screen);
+    sprites[1][3] = loadTexture("gfx/rayquazaRight1.png", screen);
 
     textures[0] = loadTexture("gfx/floor.jpg", screen);
     textures[1] = loadTexture("gfx/ceil.jpg", screen);

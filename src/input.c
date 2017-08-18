@@ -10,12 +10,12 @@ void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt){
         if(!worldMap[(int) p->x][(int) (p->y - p->diry * p->speed *dt)]) p->y -= p->diry * p->speed *dt;
     }
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_D]){
-        if(!worldMap[(int) (p->x + p->dirx * p->speed *dt)][(int) p->y]) p->x += p->diry * p->speed *dt;
-        if(!worldMap[(int) p->x][(int) (p->y + p->diry * p->speed *dt)]) p->y -= p->dirx * p->speed *dt;
+        if(!worldMap[(int) (p->x + p->diry * p->speed *dt)][(int) p->y]) p->x += p->diry * p->speed *dt;
+        if(!worldMap[(int) p->x][(int) (p->y - p->dirx * p->speed *dt)]) p->y -= p->dirx * p->speed *dt;
     }
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_A]){
-        if(!worldMap[(int) (p->x - p->dirx * p->speed *dt)][(int) p->y]) p->x -= p->diry * p->speed *dt;
-        if(!worldMap[(int) p->x][(int) (p->y - p->diry * p->speed *dt)]) p->y += p->dirx * p->speed *dt;
+        if(!worldMap[(int) (p->x - p->diry * p->speed *dt)][(int) p->y]) p->x -= p->diry * p->speed *dt;
+        if(!worldMap[(int) p->x][(int) (p->y + p->dirx * p->speed *dt)]) p->y += p->dirx * p->speed *dt;
     }
 }
 
