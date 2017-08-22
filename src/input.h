@@ -14,5 +14,7 @@
 
 #endif
 
+#define COLLISION_CIRCLE 10
+
 void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt);
 void handleMouse(Player *p, double dt, SDL_Event e);

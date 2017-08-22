@@ -1,25 +1,21 @@
 #include "input.h"
 
-int collide(int worldMap[][MAP_HEIGHT], Player *p){
-    return 0;
-}
-
 void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt){
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_W]){
-        if(!worldMap[(int) (p->x + p->dirx * p->speed *dt)][(int) p->y]) p->x += p->dirx * p->speed *dt;
-        if(!worldMap[(int) p->x][(int) (p->y + p->diry * p->speed *dt)]) p->y += p->diry * p->speed *dt;
+        if(!worldMap[(int) (p->x + COLLISION_CIRCLE * p->dirx * p->speed *dt)][(int) p->y]) p->x += p->dirx * p->speed *dt;
+        if(!worldMap[(int) p->x][(int) (p->y + COLLISION_CIRCLE * p->diry * p->speed *dt)]) p->y += p->diry * p->speed *dt;
     }
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_S]){
-        if(!worldMap[(int) (p->x - p->dirx * p->speed *dt)][(int) p->y]) p->x -= p->dirx * p->speed *dt;
-        if(!worldMap[(int) p->x][(int) (p->y - p->diry * p->speed *dt)]) p->y -= p->diry * p->speed *dt;
+        if(!worldMap[(int) (p->x - COLLISION_CIRCLE * p->dirx * p->speed *dt)][(int) p->y]) p->x -= p->dirx * p->speed *dt;
+        if(!worldMap[(int) p->x][(int) (p->y - COLLISION_CIRCLE * p->diry * p->speed *dt)]) p->y -= p->diry * p->speed *dt;
     }
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_D]){
-        if(!worldMap[(int) (p->x + p->diry * p->speed *dt)][(int) p->y]) p->x += p->diry * p->speed *dt;
-        if(!worldMap[(int) p->x][(int) (p->y - p->dirx * p->speed *dt)]) p->y -= p->dirx * p->speed *dt;
+        if(!worldMap[(int) (p->x + COLLISION_CIRCLE * p->diry * p->speed *dt)][(int) p->y]) p->x += p->diry * p->speed *dt;
+        if(!worldMap[(int) p->x][(int) (p->y - COLLISION_CIRCLE * p->dirx * p->speed *dt)]) p->y -= p->dirx * p->speed *dt;
     }
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_A]){
-        if(!worldMap[(int) (p->x - p->diry * p->speed *dt)][(int) p->y]) p->x -= p->diry * p->speed *dt;
-        if(!worldMap[(int) p->x][(int) (p->y + p->dirx * p->speed *dt)]) p->y += p->dirx * p->speed *dt;
+        if(!worldMap[(int) (p->x - COLLISION_CIRCLE * p->diry * p->speed *dt)][(int) p->y]) p->x -= p->diry * p->speed *dt;
+        if(!worldMap[(int) p->x][(int) (p->y + COLLISION_CIRCLE * p->dirx * p->speed *dt)]) p->y += p->dirx * p->speed *dt;
     }
 }
 
