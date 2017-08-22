@@ -60,10 +60,17 @@ void initSprite(Player player, int k, Sprite *sprites, Horizodraw *spriteHorizo,
     if(spriteHorizo->drawEnd > SCREEN_WIDTH) spriteHorizo->drawEnd = SCREEN_WIDTH;
 }
 
-int getIndex(double x, double y){
+double rotateX(double x, double y, double angle){
+    return cos(angle)*x + sin(angle)*y;
+}
+double rotateY(double x, double y, double angle){
+    return cos(angle)*y - sin(angle)*x;
+}
+
+int getIndex(double x, double y, double angle){
     int index;
 
-    index = (int) (2*((0.95*atan2(y, x)) +3)/3);
+    index = (int) (2*((0.95*atan2(rotateY(x, y, angle), rotateX(x, y, angle))) +3)/3);
 
     return index;
 }
@@ -75,7 +82,7 @@ void drawSprites(Player player, Sprite *sprites, SDL_Surface *spriteText[][4], S
     int index;
 
     for(int k = 0; k < SPRITE_NUM; k++){
-        index = getIndex(sprites[k].screenx, sprites[k].screeny);
+        index = getIndex(sprites[k].screenx, sprites[k].screeny, sprites[k].angle);
         initSprite(player, k, sprites, &spriteHorizo, &spriteVert);
         for(int i = spriteHorizo.drawStart; i < spriteHorizo.drawEnd; i++){
             spriteVert.textx = (int) (256 * (i - (sprites[k].screenx - spriteHorizo.width/2)) * spriteText[sprites[k].text][index]->w/spriteHorizo.width) /256;

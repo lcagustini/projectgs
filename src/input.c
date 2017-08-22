@@ -1,5 +1,9 @@
 #include "input.h"
 
+int collide(int worldMap[][MAP_HEIGHT], Player *p){
+    return 0;
+}
+
 void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt){
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_W]){
         if(!worldMap[(int) (p->x + p->dirx * p->speed *dt)][(int) p->y]) p->x += p->dirx * p->speed *dt;
@@ -21,7 +25,7 @@ void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt){
 
 void handleMouse(Player *p, double dt, SDL_Event e){
     double aux;
-    double mouse = e.motion.xrel;
+    double mouse = -e.motion.xrel;
 
     aux = p->dirx;
     p->dirx = p->dirx * cos(mouse *dt) - p->diry * sin(mouse *dt);

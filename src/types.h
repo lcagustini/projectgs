@@ -2,7 +2,7 @@
 #define SCREEN_HEIGHT 720
 
 #define MAP_WIDTH 24
-#define MAP_HEIGHT 24
+#define MAP_HEIGHT 31
 
 #define SPRITE_NUM 2
 #define WALL_TEXT_NUM 7
@@ -14,8 +14,10 @@
 #define PERPENDICULAR_X(x, y) SCREEN_DIST*y
 #define PERPENDICULAR_Y(x, y) -SCREEN_DIST*x
 
+int THREAD_NUM;
+
 typedef struct{
-    double x, y, z;
+    double x, y, z, angle;
     int text;
     double screenx, screeny;
     double dist;
