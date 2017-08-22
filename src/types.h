@@ -10,11 +10,11 @@
 #define PROJECT_X(x, y, dirx, diry, screenx, screeny) (diry*x - dirx*y)/(screenx*diry - screeny*dirx)
 #define PROJECT_Y(x, y, dirx, diry, screenx, screeny) (screenx*y - screeny*x)/(screenx*diry - screeny*dirx)
 
-#define SCREEN_DIST 0.9
-#define PERPENDICULAR_X(x, y) SCREEN_DIST*y
-#define PERPENDICULAR_Y(x, y) -SCREEN_DIST*x
+#define PERPENDICULAR_X(x, y, dist) dist*y
+#define PERPENDICULAR_Y(x, y, dist) -dist*x
 
 int THREAD_NUM;
+double SCREEN_DIST;
 
 typedef struct{
     double x, y, z, angle;

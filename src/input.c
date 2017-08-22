@@ -1,6 +1,6 @@
 #include "input.h"
 
-void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt){
+void handleMovement(int worldMap[][MAP_HEIGHT], Player *p, double dt){
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_W]){
         if(!worldMap[(int) (p->x + COLLISION_CIRCLE * p->dirx * p->speed *dt)][(int) p->y]) p->x += p->dirx * p->speed *dt;
         if(!worldMap[(int) p->x][(int) (p->y + COLLISION_CIRCLE * p->diry * p->speed *dt)]) p->y += p->diry * p->speed *dt;
@@ -16,6 +16,18 @@ void handleKeys(int worldMap[][MAP_HEIGHT], Player *p, double dt){
     if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_A]){
         if(!worldMap[(int) (p->x - COLLISION_CIRCLE * p->diry * p->speed *dt)][(int) p->y]) p->x -= p->diry * p->speed *dt;
         if(!worldMap[(int) p->x][(int) (p->y + COLLISION_CIRCLE * p->dirx * p->speed *dt)]) p->y += p->dirx * p->speed *dt;
+    }
+}
+
+void handleKeys(Player *p, SDL_Event e){
+    switch(e.key.keysym.sym){
+        case SDLK_z:
+            SCREEN_DIST += 0.1;
+        case SDLK_x:
+            SCREEN_DIST -= 0.05;
+            p->screenx = PERPENDICULAR_X(p->dirx, p->diry, SCREEN_DIST);
+            p->screeny = PERPENDICULAR_Y(p->dirx, p->diry, SCREEN_DIST);
+            break;
     }
 }
 

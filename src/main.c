@@ -56,8 +56,8 @@ void initPlayer(Player *p){
     p->diry = 0;
     p->speed = 3;
 
-    p->screenx = PERPENDICULAR_X(p->dirx, p->diry);
-    p->screeny = PERPENDICULAR_Y(p->dirx, p->diry);
+    p->screenx = PERPENDICULAR_X(p->dirx, p->diry, SCREEN_DIST);
+    p->screeny = PERPENDICULAR_Y(p->dirx, p->diry, SCREEN_DIST);
 }
 
 typedef struct{
@@ -119,14 +119,14 @@ void loop(SDL_Window *window){
     //SDL_SetRelativeMouseMode(SDL_TRUE);
     while(1){
         while(SDL_PollEvent(&e)){
-            if(e.type == SDL_QUIT){
+            if(e.type == SDL_QUIT)
                 return;
-            }
-            else if(e.type == SDL_MOUSEMOTION){
+            else if(e.type == SDL_MOUSEMOTION)
                 handleMouse(&player, dt, e);
-            }
+            else if(e.type == SDL_KEYDOWN)
+                handleKeys(&player, e);
         }
-        handleKeys(worldMap, &player, dt);
+        handleMovement(worldMap, &player, dt);
 
         for(int i = 0; i < THREAD_NUM; i++){
             pthread_create(&threadIds[i], NULL, drawWorld, &args[i]);
@@ -148,6 +148,7 @@ void loop(SDL_Window *window){
 
 int main(int argc, char* args[]){
     THREAD_NUM = SDL_GetCPUCount();
+    SCREEN_DIST = 0.9;
 
     SDL_Window *window = getWindow();
     loop(window);
