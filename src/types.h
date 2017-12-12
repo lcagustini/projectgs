@@ -15,6 +15,7 @@
 
 int THREAD_NUM;
 double SCREEN_DIST;
+Uint64 RENDERED_FRAMES;
 
 typedef struct{
     double x, y, z, angle;

@@ -107,6 +107,7 @@ void loop(SDL_Window *window){
     Uint64 curTime = SDL_GetPerformanceCounter();
     Uint64 lastTime = 0;
     double dt = 0;
+    double averageFPS = 0;
 
     for(int i = 0; i < THREAD_NUM; i++){
         args[i].id = i;
@@ -119,8 +120,10 @@ void loop(SDL_Window *window){
     //SDL_SetRelativeMouseMode(SDL_TRUE);
     while(1){
         while(SDL_PollEvent(&e)){
-            if(e.type == SDL_QUIT)
+            if(e.type == SDL_QUIT){
+                printf("Average FPS: %lf\n", averageFPS);
                 return;
+            }
             else if(e.type == SDL_MOUSEMOTION)
                 handleMouse(&player, dt, e);
             else if(e.type == SDL_KEYDOWN)
@@ -128,6 +131,7 @@ void loop(SDL_Window *window){
         }
         handleMovement(worldMap, &player, dt);
 
+        //SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
         for(int i = 0; i < THREAD_NUM; i++){
             pthread_create(&threadIds[i], NULL, drawWorld, &args[i]);
         }
@@ -142,13 +146,18 @@ void loop(SDL_Window *window){
         curTime = SDL_GetPerformanceCounter();
         dt = (double) ((abs(curTime - lastTime)) / (double) SDL_GetPerformanceFrequency());
         printf("FPS: %lf\n", 1/dt);
+
+        RENDERED_FRAMES++;
+        averageFPS = (averageFPS*RENDERED_FRAMES + 1/dt) / (RENDERED_FRAMES +1);
+
         SDL_UpdateWindowSurface(window);
     }
 }
 
 int main(int argc, char* args[]){
-    THREAD_NUM = SDL_GetCPUCount();
-    SCREEN_DIST = 0.9;
+    THREAD_NUM = 2*SDL_GetCPUCount();
+    SCREEN_DIST = 0.95;
+    RENDERED_FRAMES = 0;
 
     SDL_Window *window = getWindow();
     loop(window);

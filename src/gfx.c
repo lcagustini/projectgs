@@ -10,8 +10,8 @@ void initGfx(SDL_Surface **textures, SDL_Surface *sprites[][4], SDL_Surface *scr
     sprites[1][2] = loadTexture("gfx/rayquazaBack1.png", screen);
     sprites[1][3] = loadTexture("gfx/rayquazaRight1.png", screen);
 
-    textures[0] = loadTexture("gfx/floor.jpg", screen);
-    textures[1] = loadTexture("gfx/ceil.jpg", screen);
+    textures[0] = loadTexture("gfx/floor.png", screen);
+    textures[1] = loadTexture("gfx/ceil.png", screen);
     textures[2] = loadTexture("gfx/brick.png", screen);
     textures[3] = loadTexture("gfx/wood.png", screen);
     textures[4] = loadTexture("gfx/stone.png", screen);
